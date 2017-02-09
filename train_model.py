@@ -29,6 +29,8 @@ __author__ = 'Hongyuan Mei'
 dtype=theano.config.floatX
 
 
+MAP_NAMES = ['grid', 'jelly', 'l']
+
 #
 
 def main():
@@ -74,13 +76,17 @@ def main():
     )
     #
     parser.add_argument(
-        '-m1', '--Map1', required=False,
-        help='First Train Map'
+        "--MapTest", required=False
     )
-    parser.add_argument(
-        '-m2', '--Map2', required=False,
-        help='Second Train Map'
-    )
+
+    # parser.add_argument(
+    #     '-m1', '--Map1', required=False,
+    #     help='First Train Map'
+    # )
+    # parser.add_argument(
+    #     '-m2', '--Map2', required=False,
+    #     help='Second Train Map'
+    # )
     #
     args = parser.parse_args()
     #
@@ -109,19 +115,23 @@ def main():
     else:
         args.DropOut = numpy.float32(args.DropOut)
     #
-    if args.Map1 == None:
-        args.Map1 = 'grid'
-    else:
-        args.Map1 = str(args.Map1)
-    if args.Map2 == None:
-        args.Map2 = 'jelly'
-    else:
-        args.Map2 = str(args.Map2)
+    if args.MapTest is None:
+        args.MapTest = 'l'
+    assert(args.MapTest in MAP_NAMES)
+    args.Map1, args.Map2 = [name for name in MAP_NAMES if name != args.MapTest]
+    # if args.Map1 == None:
+    #     args.Map1 = 'grid'
+    # else:
+    #     args.Map1 = str(args.Map1)
+    # if args.Map2 == None:
+    #     args.Map2 = 'jelly'
+    # else:
+    #     args.Map2 = str(args.Map2)
     #
     id_process = os.getpid()
     time_current = datetime.datetime.now().isoformat()
     #
-    tag_model = '_PID='+str(id_process)+'_TIME='+time_current
+    tag_model = "_" + args.MapTest +'_PID='+str(id_process)+'_TIME='+time_current
     #
     path_track = './tracks/track' + tag_model + '/'
     file_log = os.path.abspath(
@@ -162,6 +172,7 @@ def main():
         'MaxEpoch': args.MaxEpoch,
         'Optimizer': args.Optimizer,
         'DropOut': args.DropOut,
+        'MapTest': args.MapTest,
         'Map1': args.Map1,
         'Map2': args.Map2
     }
