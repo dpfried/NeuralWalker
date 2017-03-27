@@ -373,7 +373,7 @@ def test_model(input_tester):
     print "finish testing !!! "
 
 
-def test_model_ensemble(input_tester):
+def test_model_ensemble(input_tester, size_beam=1):
     '''
     this function is called to test ensemble model
     '''
@@ -391,7 +391,7 @@ def test_model_ensemble(input_tester):
     #TODO: build another data process for Greedy search, i.e., gs
     ##
     bs_settings = {
-        'size_beam': 1, # greedy search
+        'size_beam': size_beam, # greedy search
         'set_path_model': input_tester['set_path_model'],
         #'trained_model': None,
         'dim_lang': data_process.dim_lang,
