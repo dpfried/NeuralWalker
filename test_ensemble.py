@@ -51,7 +51,11 @@ def main():
     )
     #
     parser.add_argument(
-        '-pp', '--PathPretrain', required=True,
+        '-pp', '--PathPretrain', required=False,
+        help='Path to the models to ensemble '
+    )
+    parser.add_argument(
+        '--ModelFiles', nargs='*',
         help='Path to the models to ensemble '
     )
     parser.add_argument(
@@ -70,17 +74,23 @@ def main():
         '--no-saveresults', dest='saveresults',
         action='store_false'
     )
+    parser.add_argument(
+        '--size_beam', type=int, default=1
+    )
     parser.set_defaults(saveresults=False)
     #
     args = parser.parse_args()
+    assert(args.PathPretrain or args.ModelFiles)
     #
     #print "args.saveresults : ", args.saveresults
     #
     if args.FileData == None:
         args.FileData = None
     #
-    assert(args.PathPretrain != None)
-    args.PathPretrain = os.path.abspath(args.PathPretrain)
+    # assert(args.PathPretrain != None)
+    if args.PathPretrain:
+        args.PathPretrain = os.path.abspath(args.PathPretrain)
+
     if args.MapTest == None:
         args.MapTest = 'l'
     else:
@@ -110,21 +120,22 @@ def main():
     #
     input_tester = {
         'path_rawdata': args.FileData,
-        'set_path_model': [],
+        'set_path_model': args.ModelFiles,
         'args': dict_args,
         'map_test': args.MapTest,
         'file_save': file_save
     }
     #
-    list_dirs = os.listdir(args.PathPretrain)
-    for dir_name in list_dirs:
-        if '.pkl' in dir_name:
-            input_tester['set_path_model'].append(
-                args.PathPretrain+'/'+dir_name
-            )
+    if args.PathPretrain:
+        list_dirs = os.listdir(args.PathPretrain)
+        for dir_name in list_dirs:
+            if '.pkl' in dir_name:
+                input_tester['set_path_model'].append(
+                    args.PathPretrain+'/'+dir_name
+                )
     #
     #print "the specs : ", input_tester
-    run_model.test_model_ensemble(input_tester)
+    run_model.test_model_ensemble(input_tester, size_beam=args.size_beam)
     #
 
 if __name__ == "__main__": main()

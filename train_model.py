@@ -5,6 +5,7 @@ run file for neural walker
 @author: hongyuan
 """
 
+import sys
 import pickle
 import time
 import numpy
@@ -34,6 +35,8 @@ MAP_NAMES = ['grid', 'jelly', 'l']
 #
 
 def main():
+    sys.stderr.write(theano.config.gcc.cxxflags)
+    sys.stderr.write("\n")
 
     parser = argparse.ArgumentParser(
         description='Trainning model ... '
@@ -131,7 +134,7 @@ def main():
     id_process = os.getpid()
     time_current = datetime.datetime.now().isoformat()
     #
-    tag_model = "_" + args.MapTest +'_PID='+str(id_process)+'_TIME='+time_current
+    tag_model = "_" + args.MapTest + "_d=" + str(args.DimModel) + "_seed=" + str(args.Seed) + '_PID='+str(id_process)+'_TIME='+time_current
     #
     path_track = './tracks/track' + tag_model + '/'
     file_log = os.path.abspath(
