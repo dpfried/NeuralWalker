@@ -80,7 +80,7 @@ def main():
         args.FileData = None
     #
     assert(args.FilePretrain != None)
-    args.PathPretrain = os.path.abspath(args.PathPretrain)
+    args.FilePretrain = os.path.abspath(args.FilePretrain)
     if args.MapTest == None:
         args.MapTest = 'l'
     else:
